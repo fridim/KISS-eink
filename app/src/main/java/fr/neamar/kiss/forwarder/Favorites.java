@@ -382,15 +382,7 @@ public class Favorites extends Forwarder implements View.OnClickListener, View.O
                 KissApplication.getApplication(mainActivity).getDataHandler().addToFavorites("app://" + componentName.getPackageName() + "/" + componentName.getClassName());
             }
         }
-        {
-            // Default browser
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://"));
-            ComponentName componentName = getLaunchingComponent(browserIntent);
-            if (componentName != null) {
-                Log.i(TAG, "Browser resolves to: " + componentName);
-                KissApplication.getApplication(mainActivity).getDataHandler().addToFavorites("app://" + componentName.getPackageName() + "/" + componentName.getClassName());
-            }
-        }
+        // Browser removed - only phone + contacts for e-ink
         mainActivity.onFavoriteChange();
     }
 
