@@ -55,6 +55,9 @@ public class InterfaceTweaks extends Forwarder {
             case "amoled-dark":
                 act.setTheme(R.style.AppThemeAmoledDark);
                 break;
+            case "eink":
+                act.setTheme(R.style.AppThemeEink);
+                break;
         }
 
         UIColors.applyOverlay(act, prefs);
@@ -81,7 +84,7 @@ public class InterfaceTweaks extends Forwarder {
                 break;
         }
 
-        if (prefs.getBoolean("icons-hide", false)) {
+        if (prefs.getBoolean("icons-hide", true)) {
             act.getTheme().applyStyle(R.style.OverlayResultSizeNoIcons, true);
         }
 

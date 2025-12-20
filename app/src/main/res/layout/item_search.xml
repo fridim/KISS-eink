@@ -26,6 +26,7 @@
         android:textDirection="locale"
         android:textIsSelectable="false"
         android:textSize="?attr/resultTitleSize"
+        android:textStyle="bold"
         tools:textSize="@dimen/result_title_size"
         tools:text="@string/ui_item_search"
         tools:ignore="UnusedAttribute" />

@@ -490,7 +490,7 @@ public abstract class Result<T extends Pojo> {
 
     protected boolean isHideIcons(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getBoolean("icons-hide", false);
+        return prefs.getBoolean("icons-hide", true);
     }
 
     protected boolean isTagsVisible(Context context) {

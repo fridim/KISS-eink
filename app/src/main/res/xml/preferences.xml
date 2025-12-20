@@ -218,7 +218,7 @@
                 android:key="subicon-visible"
                 android:title="@string/show_subicons" />
             <fr.neamar.kiss.preference.SwitchPreference
-                android:defaultValue="false"
+                android:defaultValue="true"
                 android:key="icons-hide"
                 android:summary="@string/icons_hide_desc"
                 android:title="@string/icons_hide_main" />

@@ -47,6 +47,7 @@
         android:textDirection="locale"
         android:textIsSelectable="false"
         android:textSize="?attr/resultTitleSize"
+        android:textStyle="bold"
         tools:textSize="@dimen/result_title_size"
         tools:ignore="RtlHardcoded,RtlSymmetry,UnusedAttribute"
         tools:text="@string/stub_setting" />
