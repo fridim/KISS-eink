@@ -227,6 +227,8 @@ public class ListPopup extends PopupWindow {
     protected class ScrollView extends android.widget.ScrollView {
         public ScrollView(Context context) {
             super(context);
+            // Disable overscroll for e-ink
+            setOverScrollMode(OVER_SCROLL_NEVER);
         }
 
         @Override
@@ -243,6 +245,12 @@ public class ListPopup extends PopupWindow {
                 return true;
             }
             return super.dispatchTouchEvent(event);
+        }
+
+        @Override
+        public void fling(int velocityY) {
+            // Disabled for e-ink - no smooth fling, just scroll to final position
+            // This makes scrolling instant rather than animated
         }
     }
 

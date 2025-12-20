@@ -21,7 +21,11 @@ import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.Toast;
+import android.widget.ListView;
 import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
@@ -114,6 +118,12 @@ public class SettingsActivity extends PreferenceActivity implements
 
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
+
+        // E-ink optimization: paged scrolling in settings
+        ListView listView = getListView();
+        if (listView != null) {
+            setupPagedListView(listView);
+        }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
             removePreference("gestures-holder", "double-tap");
@@ -363,6 +373,12 @@ public class SettingsActivity extends PreferenceActivity implements
                 }
             }
             InterfaceTweaks.applySystemBarInsets(dialog.getWindow().getDecorView());
+
+            // E-ink optimization: paged scrolling in preference screen dialogs
+            ListView dialogListView = dialog.findViewById(android.R.id.list);
+            if (dialogListView != null) {
+                setupPagedListView(dialogListView);
+            }
         }
 
         return false;
@@ -818,4 +834,70 @@ public class SettingsActivity extends PreferenceActivity implements
         return KissApplication.getApplication(this).getDataHandler();
     }
 
+    /**
+     * E-ink optimization: Set up paged scrolling for a ListView
+     * Swipe up/down triggers page change instead of smooth scroll
+     */
+    private void setupPagedListView(final ListView listView) {
+        listView.setOverScrollMode(ListView.OVER_SCROLL_NEVER);
+        listView.setSmoothScrollbarEnabled(false);
+
+        final int touchSlop = ViewConfiguration.get(this).getScaledTouchSlop();
+        final float[] startY = {0};
+        final boolean[] isScrolling = {false};
+
+        listView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent ev) {
+                final int action = ev.getActionMasked();
+
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        startY[0] = ev.getY();
+                        isScrolling[0] = false;
+                        return false; // Let ListView handle for click detection
+
+                    case MotionEvent.ACTION_MOVE:
+                        float deltaY = ev.getY() - startY[0];
+                        if (!isScrolling[0] && Math.abs(deltaY) > touchSlop) {
+                            isScrolling[0] = true;
+                        }
+                        // Block continuous scrolling
+                        if (isScrolling[0]) {
+                            return true;
+                        }
+                        return false;
+
+                    case MotionEvent.ACTION_UP:
+                        if (isScrolling[0]) {
+                            float totalDeltaY = ev.getY() - startY[0];
+                            if (Math.abs(totalDeltaY) > listView.getHeight() / 4) {
+                                int visibleCount = listView.getLastVisiblePosition() - listView.getFirstVisiblePosition();
+                                if (visibleCount <= 0) visibleCount = 1;
+
+                                if (totalDeltaY < 0) {
+                                    // Swiped up - page down
+                                    int targetPos = Math.min(listView.getFirstVisiblePosition() + visibleCount, listView.getCount() - 1);
+                                    listView.setSelectionFromTop(targetPos, 0);
+                                } else {
+                                    // Swiped down - page up
+                                    int targetPos = Math.max(listView.getFirstVisiblePosition() - visibleCount, 0);
+                                    listView.setSelectionFromTop(targetPos, 0);
+                                }
+                            }
+                            isScrolling[0] = false;
+                            return true;
+                        }
+                        return false;
+
+                    case MotionEvent.ACTION_CANCEL:
+                        isScrolling[0] = false;
+                        return false;
+                }
+                return false;
+            }
+        });
+    }
+
 }
+
