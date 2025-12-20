@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.DragEvent;
@@ -374,15 +373,16 @@ public class Favorites extends Forwarder implements View.OnClickListener, View.O
             }
         }
         {
-            // Default contacts app
-            Intent contactsIntent = new Intent(Intent.ACTION_DEFAULT, ContactsContract.Contacts.CONTENT_URI);
-            ComponentName componentName = getLaunchingComponent(contactsIntent);
+            // Default SMS/messaging app
+            Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
+            smsIntent.setData(Uri.parse("smsto:"));
+            ComponentName componentName = getLaunchingComponent(smsIntent);
             if (componentName != null) {
-                Log.i(TAG, "Contacts resolves to: " + componentName);
+                Log.i(TAG, "SMS resolves to: " + componentName);
                 KissApplication.getApplication(mainActivity).getDataHandler().addToFavorites("app://" + componentName.getPackageName() + "/" + componentName.getClassName());
             }
         }
-        // Browser removed - only phone + contacts for e-ink
+        // Only phone + SMS for e-ink
         mainActivity.onFavoriteChange();
     }
 
