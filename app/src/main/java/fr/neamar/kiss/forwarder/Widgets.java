@@ -144,15 +144,19 @@ class Widgets extends Forwarder {
 
     boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.add_widget) {
-            // request widget picker, a selection will lead to a call of onActivityResult
-            int appWidgetId = mAppWidgetHost.allocateAppWidgetId();
-            Intent pickIntent = new Intent(mainActivity, PickAppWidgetActivity.class);
-            pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-            mainActivity.startActivityForResult(pickIntent, REQUEST_APPWIDGET_PICKED);
+            showWidgetPicker();
             return true;
         }
 
         return false;
+    }
+
+    void showWidgetPicker() {
+        // request widget picker, a selection will lead to a call of onActivityResult
+        int appWidgetId = mAppWidgetHost.allocateAppWidgetId();
+        Intent pickIntent = new Intent(mainActivity, PickAppWidgetActivity.class);
+        pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        mainActivity.startActivityForResult(pickIntent, REQUEST_APPWIDGET_PICKED);
     }
 
     void onCreateContextMenu(ContextMenu menu) {

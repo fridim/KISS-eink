@@ -557,9 +557,8 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
     @Override
     public boolean onKeyDown(int keycode, @NonNull KeyEvent e) {
         if (keycode == KeyEvent.KEYCODE_MENU) {
-            // For devices with a physical menu button, we still want to display *our* contextual menu
-            menuButton.showContextMenu();
-            menuButton.performHapticFeedback(LONG_PRESS);
+            // For devices with a physical menu button, use the custom popup menu
+            onMenuButtonClicked(menuButton);
             return true;
         }
         if (keycode != KeyEvent.KEYCODE_BACK) {
