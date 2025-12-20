@@ -8,7 +8,8 @@ import android.view.ViewTreeObserver;
 import java.util.HashMap;
 
 public class AnimatedListView extends BlockableListView {
-    private static final int MOVE_DURATION = 100;
+    // E-ink optimization: no animations
+    private static final int MOVE_DURATION = 0;
     protected final HashMap<Long, ItemInfo> mItemMap = new HashMap<>();
 
     public AnimatedListView(Context context) {
@@ -70,19 +71,8 @@ public class AnimatedListView extends BlockableListView {
                         // this view may have moved
                         delta = topBeforeLayout - topAfterLayout;
                     } else {
-                        // this is a new view
-                        if (i == 0) {
-                            // the first visible position can slide from the top
-                            delta = -child.getHeight() - listView.getDividerHeight();
-                        } else {
-                            delta = 0;
-
-                            // animate new views
-                            child.setScaleY(0.f);
-                            child.animate()
-                                    .setDuration(MOVE_DURATION)
-                                    .scaleY(1.f);
-                        }
+                        // this is a new view - no animation for e-ink
+                        delta = 0;
                     }
                     if (delta != 0) {
                         child.setTranslationY(delta);
