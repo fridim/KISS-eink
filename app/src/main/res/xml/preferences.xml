@@ -89,7 +89,7 @@
             android:summaryOn="@string/enable_favorites_bar_summary_on"
             android:title="@string/enable_favorites_bar" />
         <fr.neamar.kiss.preference.SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:dependency="enable-favorites-bar"
             android:key="large-favorites-bar"
             android:title="@string/large_favorites_bar" />
