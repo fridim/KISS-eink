@@ -842,6 +842,14 @@ public class SettingsActivity extends PreferenceActivity implements
         listView.setOverScrollMode(ListView.OVER_SCROLL_NEVER);
         listView.setSmoothScrollbarEnabled(false);
 
+        // Configure scrollbar to match main results list
+        listView.setVerticalScrollBarEnabled(true);
+        listView.setScrollBarStyle(ListView.SCROLLBARS_INSIDE_OVERLAY);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            listView.setVerticalScrollbarThumbDrawable(getResources().getDrawable(R.drawable.scrollbar_thumb));
+            listView.setVerticalScrollbarTrackDrawable(getResources().getDrawable(R.drawable.scrollbar_track));
+        }
+
         final int touchSlop = ViewConfiguration.get(this).getScaledTouchSlop();
         final float[] startY = {0};
         final boolean[] isScrolling = {false};

@@ -7,6 +7,10 @@
         <item name="android:textAppearanceLargePopupMenu">@style/LargeMenuText</item>
         <item name="android:textAppearanceSmallPopupMenu">@style/LargeMenuText</item>
         <item name="android:popupMenuStyle">@style/CustomPopupMenu</item>
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_thumb</item>
+        <item name="android:scrollbarTrackVertical">@drawable/scrollbar_track</item>
+        <item name="android:scrollbarSize">10dp</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/fastscroll_thumb</item>
     </style>
 
     <style name="BaseThemeDark" parent="@android:style/Theme.Holo.NoActionBar">
@@ -15,6 +19,10 @@
         <item name="android:textAppearanceLargePopupMenu">@style/LargeMenuText</item>
         <item name="android:textAppearanceSmallPopupMenu">@style/LargeMenuText</item>
         <item name="android:popupMenuStyle">@style/CustomPopupMenu</item>
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_thumb</item>
+        <item name="android:scrollbarTrackVertical">@drawable/scrollbar_track</item>
+        <item name="android:scrollbarSize">10dp</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/fastscroll_thumb</item>
     </style>
 
     <style name="AppThemeLight" parent="BaseThemeLight">
