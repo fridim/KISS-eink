@@ -197,7 +197,7 @@ public class BlockableListView extends ListView {
     @Override
     public void smoothScrollBy(int distance, int duration) {
         // Instant scroll instead of smooth
-        if (distance != 0) {
+        if (distance != 0 && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
             scrollListBy(distance);
         }
     }
