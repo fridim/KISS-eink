@@ -79,8 +79,7 @@ public class PhoneResult extends CallResult<PhonePojo> {
 
     @Override
     public Drawable getDrawable(Context context) {
-        //noinspection: getDrawable(int, Theme) requires SDK 21+
-        return context.getResources().getDrawable(android.R.drawable.ic_menu_call);
+        return context.getResources().getDrawable(fr.neamar.kiss.R.drawable.ic_phone);
     }
 
     @Override
