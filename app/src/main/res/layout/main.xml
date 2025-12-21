@@ -129,7 +129,7 @@
                 android:paddingLeft="@dimen/launcher_button_padding"
                 android:paddingEnd="@dimen/launcher_button_padding"
                 android:paddingRight="@dimen/launcher_button_padding"
-                android:src="@drawable/ic_launcher"
+                android:src="@drawable/ic_search_mudita"
                 android:tag="showMenu" />
 
             <ProgressBar
@@ -203,8 +203,7 @@
                 android:paddingLeft="@dimen/launcher_button_padding"
                 android:paddingEnd="@dimen/launcher_button_padding"
                 android:paddingRight="@dimen/launcher_button_padding"
-                android:src="@drawable/clear_dark"
-                android:tint="?attr/searchColor"
+                android:src="@drawable/ic_clear_mudita"
                 android:visibility="visible" />
         </FrameLayout>
 

@@ -180,6 +180,8 @@
         <item name="android:textAppearanceListItemSmall">@style/LargePreferenceSummaryText</item>
         <!-- Mudita Mindful Design: Custom switch style -->
         <item name="android:switchStyle">@style/MuditaSwitchMaterial</item>
+        <!-- Mudita: Black preference category headers -->
+        <item name="android:preferenceCategoryStyle">@style/MuditaPreferenceCategory</item>
     </style>
 
     <!-- Mudita Mindful Design: Switch style for e-ink (Material)
@@ -210,6 +212,8 @@
         <item name="android:textAppearanceListItemSmall">@style/LargePreferenceSummaryText</item>
         <!-- Mudita Mindful Design: Custom switch style -->
         <item name="android:switchStyle">@style/MuditaSwitchMaterial</item>
+        <!-- Mudita: Black preference category headers -->
+        <item name="android:preferenceCategoryStyle">@style/MuditaPreferenceCategory</item>
     </style>
 
     <style name="SettingThemeAmoledDark" parent="SettingThemeDark">

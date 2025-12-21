@@ -156,7 +156,7 @@
                 android:title="@string/theme_bar_color" />
         </PreferenceScreen>
         <ListPreference
-            android:defaultValue="default"
+            android:defaultValue="large"
             android:entries="@array/resultsSizeEntries"
             android:entryValues="@array/resultsSizeValues"
             android:key="results-size"
@@ -246,7 +246,7 @@
                 android:key="transparent-favorites"
                 android:title="@string/transparent_favorites_bar" />
             <fr.neamar.kiss.preference.SwitchPreference
-                android:defaultValue="false"
+                android:defaultValue="true"
                 android:key="large-search-bar"
                 android:title="@string/large_search_bar" />
             <fr.neamar.kiss.preference.SwitchPreference

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mudita Mindful Design: Clear button - big black circle with white cross -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="56dp"
+    android:height="56dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Black circle background - full size -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M12,0C5.37,0 0,5.37 0,12s5.37,12 12,12 12,-5.37 12,-12S18.63,0 12,0z" />
+    <!-- White X cross - medium thickness -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M16.46,7.54c-0.49,-0.49 -1.28,-0.49 -1.77,0L12,10.23 9.31,7.54c-0.49,-0.49 -1.28,-0.49 -1.77,0s-0.49,1.28 0,1.77L10.23,12l-2.69,2.69c-0.49,0.49 -0.49,1.28 0,1.77s1.28,0.49 1.77,0L12,13.77l2.69,2.69c0.49,0.49 1.28,0.49 1.77,0s0.49,-1.28 0,-1.77L13.77,12l2.69,-2.69c0.49,-0.49 0.49,-1.28 0,-1.77z" />
+</vector>
