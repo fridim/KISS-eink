@@ -37,5 +37,10 @@ This fork is a version of KISS with style and cosmetic changes to work well on e
           <img width="480" height="800" alt="Screenshot_20251221-184141" src="https://github.com/user-attachments/assets/9895e24b-e3e5-4218-ba2d-72d94ddfdb7c" />
       </td>
 </tr>
+      <tr>
+      <td>
+            <img width="480" height="800" alt="Screenshot_20251221-193455" src="https://github.com/user-attachments/assets/7659c4be-7ca3-48ac-b0d8-748930d94695" />
+      </td>
+      </tr>
 </table>
 
