@@ -266,14 +266,14 @@ public class InterfaceTweaks extends Forwarder {
     private void tintResources(MainActivity mainActivity) {
         int primaryColorOverride = UIColors.getPrimaryColor(mainActivity);
 
-        // Circuit breaker, keep default behavior.
+        // Launcher button - always use black for e-ink visibility
+        ImageView launcherButton = mainActivity.findViewById(R.id.launcherButton);
+        launcherButton.setColorFilter(Color.BLACK);
+
+        // Circuit breaker, keep default behavior for other elements.
         if (primaryColorOverride == UIColors.COLOR_DEFAULT) {
             return;
         }
-
-        // Launcher button should have the main color
-        ImageView launcherButton = mainActivity.findViewById(R.id.launcherButton);
-        launcherButton.setColorFilter(primaryColorOverride);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             ProgressBar loaderBar = mainActivity.findViewById(R.id.loaderBar);

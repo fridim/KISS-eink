@@ -111,9 +111,9 @@ public class ContactsResult extends CallResult<ContactsPojo> {
         PackageManager pm = context.getPackageManager();
         boolean hasPhone = pojo.phone != null && pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
 
-        // Phone action
+        // Phone action - use black for e-ink visibility
         ImageButton phoneButton = view.findViewById(R.id.item_contact_action_phone);
-        phoneButton.setColorFilter(primaryColor);
+        phoneButton.setColorFilter(android.graphics.Color.BLACK);
 
         if (hasPhone) {
             phoneButton.setVisibility(View.VISIBLE);
@@ -125,9 +125,9 @@ public class ContactsResult extends CallResult<ContactsPojo> {
             phoneButton.setVisibility(View.GONE);
         }
 
-        // Message action
+        // Message action - use black for e-ink visibility
         ImageButton messageButton = view.findViewById(R.id.item_contact_action_message);
-        messageButton.setColorFilter(primaryColor);
+        messageButton.setColorFilter(android.graphics.Color.BLACK);
 
         if (pojo.getContactData() != null) {
             messageButton.setVisibility(View.VISIBLE);

@@ -57,6 +57,7 @@ import fr.neamar.kiss.searcher.QueryInterface;
 import fr.neamar.kiss.searcher.SearchHandler;
 import fr.neamar.kiss.searcher.Searcher;
 import fr.neamar.kiss.ui.AnimatedListView;
+import fr.neamar.kiss.ui.DottedLineDrawable;
 import fr.neamar.kiss.ui.KeyboardScrollHider;
 import fr.neamar.kiss.ui.ListPopup;
 import fr.neamar.kiss.ui.SearchEditText;
@@ -229,6 +230,9 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
          */
         setContentView(R.layout.main);
         this.list = this.findViewById(android.R.id.list);
+        // Mudita Mindful Design: 1px dotted black separator for e-ink
+        this.list.setDivider(new DottedLineDrawable());
+        this.list.setDividerHeight((int) (2 * getResources().getDisplayMetrics().density));
         this.listContainer = (View) this.list.getParent();
         this.emptyListView = this.findViewById(android.R.id.empty);
         this.kissBar = findViewById(R.id.mainKissbar);
