@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mudita Mindful Design: Search/magnifier icon - extra thick and bold -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="44dp"
+    android:height="44dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Magnifier with thick stroke -->
+    <path
+        android:fillColor="#000000"
+        android:strokeWidth="0"
+        android:pathData="M9.5,2C4.81,2 1,5.81 1,10.5S4.81,19 9.5,19c1.95,0 3.74,-0.66 5.18,-1.76l5.54,5.54c0.78,0.78 2.05,0.78 2.83,0s0.78,-2.05 0,-2.83l-5.54,-5.54C18.61,13.47 19,11.55 19,10.5C19,5.81 15.19,2 9.5,2zM9.5,5c3.04,0 5.5,2.46 5.5,5.5S12.54,16 9.5,16S4,13.54 4,10.5S6.46,5 9.5,5z" />
+</vector>

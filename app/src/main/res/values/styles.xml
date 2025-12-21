@@ -65,4 +65,9 @@
         <item name="android:popupBackground">@drawable/popup_background</item>
     </style>
 
+    <!-- Mudita: Preference category style - black text, larger size -->
+    <style name="MuditaPreferenceCategory">
+        <item name="android:layout">@layout/preference_category_mudita</item>
+    </style>
+
 </resources>
