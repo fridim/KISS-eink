@@ -24,9 +24,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 import android.widget.ListView;
 import android.widget.Toolbar;
+import android.view.Gravity;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -53,6 +56,7 @@ import fr.neamar.kiss.pojo.TagDummyPojo;
 import fr.neamar.kiss.preference.ExcludePreferenceScreen;
 import fr.neamar.kiss.preference.PreferenceScreenHelper;
 import fr.neamar.kiss.preference.SwitchPreference;
+import fr.neamar.kiss.ui.MuditaScrollbar;
 import fr.neamar.kiss.searcher.QuerySearcher;
 import fr.neamar.kiss.utils.DrawableUtils;
 import fr.neamar.kiss.utils.MimeTypeUtils;
@@ -835,21 +839,70 @@ public class SettingsActivity extends PreferenceActivity implements
     }
 
     /**
-     * E-ink optimization: Set up paged scrolling for a ListView
+     * E-ink optimization: Set up paged scrolling for a ListView with MuditaScrollbar
      * Swipe up/down triggers page change instead of smooth scroll
      */
     private void setupPagedListView(final ListView listView) {
         listView.setOverScrollMode(ListView.OVER_SCROLL_NEVER);
         listView.setSmoothScrollbarEnabled(false);
+        listView.setVerticalScrollBarEnabled(false);
+        listView.setFastScrollEnabled(false);
 
-        // Configure scrollbar to match main results list
-        listView.setVerticalScrollBarEnabled(true);
-        listView.setScrollBarStyle(ListView.SCROLLBARS_INSIDE_OVERLAY);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            listView.setVerticalScrollbarThumbDrawable(getResources().getDrawable(R.drawable.scrollbar_thumb));
-            listView.setVerticalScrollbarTrackDrawable(getResources().getDrawable(R.drawable.scrollbar_track));
+        // Add right padding to make room for the scrollbar
+        float density = getResources().getDisplayMetrics().density;
+        int scrollbarSpace = (int) (48 * density);
+        listView.setPadding(
+            listView.getPaddingLeft(),
+            listView.getPaddingTop(),
+            listView.getPaddingRight() + scrollbarSpace,
+            listView.getPaddingBottom()
+        );
+        listView.setClipToPadding(false);
+
+        // Add MuditaScrollbar programmatically
+        ViewGroup parent = (ViewGroup) listView.getParent();
+        if (parent != null) {
+            // Create scrollbar
+            MuditaScrollbar scrollbar = new MuditaScrollbar(this);
+
+            // Create layout params for the scrollbar (align to end/right)
+            FrameLayout.LayoutParams scrollbarParams = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                Gravity.END
+            );
+            scrollbar.setLayoutParams(scrollbarParams);
+
+            // If parent is a FrameLayout, just add the scrollbar
+            if (parent instanceof FrameLayout) {
+                parent.addView(scrollbar);
+            } else {
+                // Wrap in a FrameLayout
+                int index = parent.indexOfChild(listView);
+                ViewGroup.LayoutParams listParams = listView.getLayoutParams();
+
+                parent.removeView(listView);
+
+                FrameLayout wrapper = new FrameLayout(this);
+                wrapper.setLayoutParams(listParams);
+
+                FrameLayout.LayoutParams newListParams = new FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                );
+                listView.setLayoutParams(newListParams);
+
+                wrapper.addView(listView);
+                wrapper.addView(scrollbar);
+
+                parent.addView(wrapper, index);
+            }
+
+            // Attach scrollbar to listview (post to ensure adapter is set)
+            listView.post(() -> scrollbar.attachToListView(listView));
         }
 
+        // Keep swipe-to-page as a fallback
         final int touchSlop = ViewConfiguration.get(this).getScaledTouchSlop();
         final float[] startY = {0};
         final boolean[] isScrolling = {false};
@@ -863,14 +916,13 @@ public class SettingsActivity extends PreferenceActivity implements
                     case MotionEvent.ACTION_DOWN:
                         startY[0] = ev.getY();
                         isScrolling[0] = false;
-                        return false; // Let ListView handle for click detection
+                        return false;
 
                     case MotionEvent.ACTION_MOVE:
                         float deltaY = ev.getY() - startY[0];
                         if (!isScrolling[0] && Math.abs(deltaY) > touchSlop) {
                             isScrolling[0] = true;
                         }
-                        // Block continuous scrolling
                         if (isScrolling[0]) {
                             return true;
                         }
@@ -879,16 +931,14 @@ public class SettingsActivity extends PreferenceActivity implements
                     case MotionEvent.ACTION_UP:
                         if (isScrolling[0]) {
                             float totalDeltaY = ev.getY() - startY[0];
-                            if (Math.abs(totalDeltaY) > listView.getHeight() / 4) {
+                            if (Math.abs(totalDeltaY) > listView.getHeight() / 6) {
                                 int visibleCount = listView.getLastVisiblePosition() - listView.getFirstVisiblePosition();
                                 if (visibleCount <= 0) visibleCount = 1;
 
                                 if (totalDeltaY < 0) {
-                                    // Swiped up - page down
                                     int targetPos = Math.min(listView.getFirstVisiblePosition() + visibleCount, listView.getCount() - 1);
                                     listView.setSelectionFromTop(targetPos, 0);
                                 } else {
-                                    // Swiped down - page up
                                     int targetPos = Math.max(listView.getFirstVisiblePosition() - visibleCount, 0);
                                     listView.setSelectionFromTop(targetPos, 0);
                                 }

@@ -59,6 +59,7 @@ import fr.neamar.kiss.searcher.Searcher;
 import fr.neamar.kiss.ui.AnimatedListView;
 import fr.neamar.kiss.ui.DottedLineDrawable;
 import fr.neamar.kiss.ui.KeyboardScrollHider;
+import fr.neamar.kiss.ui.MuditaScrollbar;
 import fr.neamar.kiss.ui.ListPopup;
 import fr.neamar.kiss.ui.SearchEditText;
 import fr.neamar.kiss.utils.PackageManagerUtils;
@@ -97,6 +98,10 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
      */
     public AnimatedListView list;
     public View listContainer;
+    /**
+     * Mudita Mindful Design: Custom e-ink scrollbar
+     */
+    public MuditaScrollbar scrollbar;
     /**
      * View to display when list is empty
      */
@@ -233,6 +238,8 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         // Mudita Mindful Design: 1px dotted black separator for e-ink
         this.list.setDivider(new DottedLineDrawable());
         this.list.setDividerHeight((int) (2 * getResources().getDisplayMetrics().density));
+        // Mudita Mindful Design: Custom e-ink scrollbar (attached after adapter set below)
+        this.scrollbar = this.findViewById(R.id.muditaScrollbar);
         this.listContainer = (View) this.list.getParent();
         this.emptyListView = this.findViewById(android.R.id.empty);
         this.kissBar = findViewById(R.id.mainKissbar);
@@ -266,6 +273,9 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         // Create adapter for records
         this.adapter = new RecordAdapter(this, new ArrayList<>());
         this.list.setAdapter(this.adapter);
+
+        // Mudita Mindful Design: Attach scrollbar after adapter is set
+        this.scrollbar.attachToListView(this.list);
 
         this.list.setOnItemClickListener((parent, v, position, id) -> adapter.onClick(position, v));
 
@@ -799,8 +809,8 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
             }
             kissBar.setVisibility(View.VISIBLE);
 
-            // Display the alphabet on the scrollbar (#926)
-            list.setFastScrollEnabled(true);
+            // E-ink: Don't use fast scroll - MuditaScrollbar handles navigation
+            // list.setFastScrollEnabled(true);
         } else {
             isDisplayingKissBar = false;
             // Hide the bar
