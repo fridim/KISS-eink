@@ -28,27 +28,17 @@ This fork is a version of KISS with style and cosmetic changes to work well on e
 <table>
 <tr>
       <td>
-         <img width="480" height="800" alt="Screenshot_20251220-103638" src="https://github.com/user-attachments/assets/da52be2b-90aa-46d4-9cc4-f22f2af449b8" />
+            <img width="480" height="800" alt="Screenshot_20251221-184051" src="https://github.com/user-attachments/assets/21140710-67c6-41f4-97f6-8e6458cef249" />
       </td>
       <td>
-            <img width="480" height="800" alt="Screenshot_20251220-091740" src="https://github.com/user-attachments/assets/b8ed3718-a4a8-4c4a-aacd-66c76dec0b0b" />
+            <img width="480" height="800" alt="Screenshot_20251221-184115" src="https://github.com/user-attachments/assets/8712d546-4741-42d8-b924-1aa5da6381e9" />
       </td>
       <td>
-            <img width="480" height="800" alt="Screenshot_20251220-091745" src="https://github.com/user-attachments/assets/86204ac9-37f5-4e30-b147-4edb0288f448" />
+          <img width="480" height="800" alt="Screenshot_20251221-184141" src="https://github.com/user-attachments/assets/9895e24b-e3e5-4218-ba2d-72d94ddfdb7c" />
+      </td>
+      <td>
+            <img width="480" height="800" alt="Screenshot_20251221-184324" src="https://github.com/user-attachments/assets/6ed0ab3c-4d32-4071-b87b-fa5ce97e0801" />
       </td>
 </tr>
-      <tr>
-      <td>
-            <img width="480" height="800" alt="Screenshot_20251028-222021" src="https://github.com/user-attachments/assets/a2d3fc31-99c9-4d96-a71c-d140eef079a0" />
-      </td>
-            <td><img width="480" height="800" alt="Editing a result line, or a favorite" src="https://github.com/user-attachments/assets/89016559-c7cc-4f81-80ef-334b8a38b208" /></td>
-      </tr>
 </table>
-
-
-
-
-
-
-
 
