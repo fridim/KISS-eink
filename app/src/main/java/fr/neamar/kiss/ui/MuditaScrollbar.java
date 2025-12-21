@@ -25,21 +25,25 @@ import android.widget.ListView;
 public class MuditaScrollbar extends View implements AbsListView.OnScrollListener {
 
     // MMD-inspired dimensions
-    private static final int SCROLLBAR_WIDTH_DP = 24;  // Total width
+    private static final int SCROLLBAR_WIDTH_DP = 32;  // Total width (increased)
     private static final int SCROLLBAR_PADDING_DP = 8; // Horizontal padding
-    private static final int ARROW_SIZE_DP = 16;       // Chevron size (smaller)
-    private static final int ARROW_PADDING_DP = 12;    // Padding around arrows
-    private static final int TRACK_WIDTH_DP = 8;       // Track width (MMD spec)
+    private static final int ARROW_SIZE_DP = 22;       // Chevron size (smaller)
+    private static final int ARROW_PADDING_DP = 16;    // Padding around arrows (increased)
+    private static final int TRACK_GAP_DP = 8;         // Gap between arrows and track
+    private static final int TRACK_WIDTH_DP = 10;      // Track width (slightly wider)
     private static final int MIN_THUMB_HEIGHT_DP = 16;
-    private static final int CORNER_RADIUS_DP = 4;     // Rounded corners
+    private static final int CORNER_RADIUS_DP = 5;     // Rounded corners
 
     private final Paint fillPaint;
     private final Paint strokePaint;
     private final Paint whitePaint;
+    private final Paint arrowPaint;
+    private final Paint arrowDisabledPaint;
     private final int scrollbarWidth;
     private final int scrollbarPadding;
     private final int arrowSize;
     private final int arrowPadding;
+    private final int trackGap;
     private final int trackWidth;
     private final int minThumbHeight;
     private final int cornerRadius;
@@ -52,6 +56,8 @@ public class MuditaScrollbar extends View implements AbsListView.OnScrollListene
     private ListAdapter attachedAdapter;
     private DataSetObserver adapterObserver;
     private boolean isScrollable = false;
+    private boolean canScrollUp = false;
+    private boolean canScrollDown = false;
 
     // Scroll position tracking
     private int firstVisibleItem = 0;
@@ -74,6 +80,7 @@ public class MuditaScrollbar extends View implements AbsListView.OnScrollListene
         scrollbarPadding = (int) (SCROLLBAR_PADDING_DP * density);
         arrowSize = (int) (ARROW_SIZE_DP * density);
         arrowPadding = (int) (ARROW_PADDING_DP * density);
+        trackGap = (int) (TRACK_GAP_DP * density);
         trackWidth = (int) (TRACK_WIDTH_DP * density);
         minThumbHeight = (int) (MIN_THUMB_HEIGHT_DP * density);
         cornerRadius = (int) (CORNER_RADIUS_DP * density);
@@ -96,6 +103,21 @@ public class MuditaScrollbar extends View implements AbsListView.OnScrollListene
         whitePaint.setColor(0xFFFFFFFF);
         whitePaint.setStyle(Paint.Style.FILL);
         whitePaint.setAntiAlias(true);
+
+        // Arrow paint - filled with rounded corners
+        float cornerEffect = 3 * density;  // Rounded corner radius
+        arrowPaint = new Paint();
+        arrowPaint.setColor(0xFF000000);
+        arrowPaint.setStyle(Paint.Style.FILL);
+        arrowPaint.setAntiAlias(true);
+        arrowPaint.setPathEffect(new android.graphics.CornerPathEffect(cornerEffect));
+
+        // Disabled arrow paint - gray filled with rounded corners
+        arrowDisabledPaint = new Paint();
+        arrowDisabledPaint.setColor(0xFFAAAAAA);
+        arrowDisabledPaint.setStyle(Paint.Style.FILL);
+        arrowDisabledPaint.setAntiAlias(true);
+        arrowDisabledPaint.setPathEffect(new android.graphics.CornerPathEffect(cornerEffect));
 
         // Create paths
         upArrowPath = new Path();
@@ -157,6 +179,8 @@ public class MuditaScrollbar extends View implements AbsListView.OnScrollListene
     private void updateScrollability() {
         if (attachedList == null || attachedList.getAdapter() == null) {
             isScrollable = false;
+            canScrollUp = false;
+            canScrollDown = false;
             setVisibility(GONE);
             return;
         }
@@ -164,6 +188,8 @@ public class MuditaScrollbar extends View implements AbsListView.OnScrollListene
         int itemCount = attachedList.getAdapter().getCount();
         if (itemCount == 0) {
             isScrollable = false;
+            canScrollUp = false;
+            canScrollDown = false;
             setVisibility(GONE);
             return;
         }
@@ -175,6 +201,8 @@ public class MuditaScrollbar extends View implements AbsListView.OnScrollListene
 
         if (childCount == 0) {
             isScrollable = false;
+            canScrollUp = false;
+            canScrollDown = false;
             setVisibility(GONE);
             return;
         }
@@ -200,6 +228,11 @@ public class MuditaScrollbar extends View implements AbsListView.OnScrollListene
 
         // Only scrollable if not all content is visible
         isScrollable = !(firstFullyVisible && lastFullyVisible);
+
+        // Determine if we can scroll up (not at top) or down (not at bottom)
+        canScrollUp = !firstFullyVisible;
+        canScrollDown = !lastFullyVisible;
+
         setVisibility(isScrollable ? VISIBLE : GONE);
     }
 
@@ -291,17 +324,17 @@ public class MuditaScrollbar extends View implements AbsListView.OnScrollListene
 
         int arrowAreaHeight = arrowSize + arrowPadding * 2;
 
-        // === Draw Up Arrow (small chevron) ===
+        // === Draw Up Arrow (small chevron) - gray if can't scroll up ===
         int upArrowCenterY = arrowPadding + arrowSize / 2;
-        drawChevronUp(canvas, centerX, upArrowCenterY);
+        drawChevronUp(canvas, centerX, upArrowCenterY, canScrollUp);
 
-        // === Draw Down Arrow (small chevron) ===
+        // === Draw Down Arrow (small chevron) - gray if can't scroll down ===
         int downArrowCenterY = height - arrowPadding - arrowSize / 2;
-        drawChevronDown(canvas, centerX, downArrowCenterY);
+        drawChevronDown(canvas, centerX, downArrowCenterY, canScrollDown);
 
-        // === Draw Track between arrows ===
-        int trackTop = arrowAreaHeight;
-        int trackBottom = height - arrowAreaHeight;
+        // === Draw Track between arrows (with extra gap) ===
+        int trackTop = arrowAreaHeight + trackGap;
+        int trackBottom = height - arrowAreaHeight - trackGap;
         int trackHeight = trackBottom - trackTop;
 
         if (trackHeight > minThumbHeight) {
@@ -331,32 +364,34 @@ public class MuditaScrollbar extends View implements AbsListView.OnScrollListene
         }
     }
 
-    private void drawChevronUp(Canvas canvas, int centerX, int centerY) {
+    private void drawChevronUp(Canvas canvas, int centerX, int centerY, boolean enabled) {
+        // Flat, wide triangle - width is larger than height
         int halfWidth = arrowSize / 2;
-        int halfHeight = arrowSize / 3;
+        int halfHeight = arrowSize / 4;  // Flatter shape
 
         upArrowPath.reset();
-        // Simple chevron pointing up (like > rotated 90 degrees counterclockwise)
+        // Filled triangle pointing up with rounded corners via CornerPathEffect
         upArrowPath.moveTo(centerX - halfWidth, centerY + halfHeight);
         upArrowPath.lineTo(centerX, centerY - halfHeight);
         upArrowPath.lineTo(centerX + halfWidth, centerY + halfHeight);
         upArrowPath.close();
 
-        canvas.drawPath(upArrowPath, fillPaint);
+        canvas.drawPath(upArrowPath, enabled ? arrowPaint : arrowDisabledPaint);
     }
 
-    private void drawChevronDown(Canvas canvas, int centerX, int centerY) {
+    private void drawChevronDown(Canvas canvas, int centerX, int centerY, boolean enabled) {
+        // Flat, wide triangle - width is larger than height
         int halfWidth = arrowSize / 2;
-        int halfHeight = arrowSize / 3;
+        int halfHeight = arrowSize / 4;  // Flatter shape
 
         downArrowPath.reset();
-        // Simple chevron pointing down
+        // Filled triangle pointing down with rounded corners via CornerPathEffect
         downArrowPath.moveTo(centerX - halfWidth, centerY - halfHeight);
         downArrowPath.lineTo(centerX, centerY + halfHeight);
         downArrowPath.lineTo(centerX + halfWidth, centerY - halfHeight);
         downArrowPath.close();
 
-        canvas.drawPath(downArrowPath, fillPaint);
+        canvas.drawPath(downArrowPath, enabled ? arrowPaint : arrowDisabledPaint);
     }
 
     @Override
