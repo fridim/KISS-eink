@@ -274,17 +274,12 @@ public class UIColors {
      * Get color for notification dots.
      *
      * @param context
-     * @return color from preferences
+     * @return black color for e-ink displays
      */
     @ColorInt
     public static int getNotificationDotColor(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            // use accent color from system if available
-            return getColor(context, "primary-color", getNotificationDotColorRes(context));
-        } else {
-            // fall back to primary color
-            return getPrimaryColor(context);
-        }
+        // Mudita Mindful Design: Always use black for e-ink displays
+        return 0xFF000000;
     }
 
     @ColorRes
