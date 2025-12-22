@@ -27,20 +27,14 @@ This fork is a version of KISS with style and cosmetic changes to work well on e
 ### Screenshots
 <table>
 <tr>
-      <td>
-            <img width="480" height="800" alt="Screenshot_20251221-184051" src="https://github.com/user-attachments/assets/21140710-67c6-41f4-97f6-8e6458cef249" />
+      <td><img width="480" height="800" alt="Screenshot_20251222-122043" src="https://github.com/user-attachments/assets/33bcc178-3079-49bd-8012-3cf0a0eec61b" />
       </td>
       <td>
-            <img width="480" height="800" alt="Screenshot_20251221-184115" src="https://github.com/user-attachments/assets/8712d546-4741-42d8-b924-1aa5da6381e9" />
+            <img width="480" height="800" alt="Screenshot_20251222-020818" src="https://github.com/user-attachments/assets/0ac3f1e6-3564-4352-a082-47ee625fb9fd" />
       </td>
       <td>
-          <img width="480" height="800" alt="Screenshot_20251221-184141" src="https://github.com/user-attachments/assets/9895e24b-e3e5-4218-ba2d-72d94ddfdb7c" />
+      <img width="480" height="800" alt="Screenshot_20251222-020951" src="https://github.com/user-attachments/assets/1f756e6a-0a84-4099-8dbb-6b5c3efc49b4" />
       </td>
 </tr>
-      <tr>
-      <td>
-            <img width="480" height="800" alt="Screenshot_20251221-193455" src="https://github.com/user-attachments/assets/7659c4be-7ca3-48ac-b0d8-748930d94695" />
-      </td>
-      </tr>
 </table>
 
