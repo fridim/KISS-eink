@@ -73,28 +73,6 @@ public class AppResult extends ResultWithTags<AppPojo> {
         TextView tagsView = view.findViewById(R.id.item_app_tag);
         displayTags(context, fuzzyScore, tagsView);
 
-        final ImageView appIcon = view.findViewById(R.id.item_app_icon);
-        if (!isHideIcons(context)) {
-            if (appIcon.getTag() instanceof ComponentName && className.equals(appIcon.getTag())) {
-                icon = appIcon.getDrawable();
-            }
-            this.setAsyncDrawable(appIcon);
-        } else {
-            appIcon.setImageDrawable(null);
-        }
-
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            String packageKey = getPackageKey();
-
-            SharedPreferences notificationPrefs = context.getSharedPreferences(NotificationListener.NOTIFICATION_PREFERENCES_NAME, Context.MODE_PRIVATE);
-            ImageView notificationView = view.findViewById(R.id.item_notification_dot);
-            notificationView.setVisibility(notificationPrefs.contains(packageKey) ? View.VISIBLE : View.GONE);
-            notificationView.setTag(packageKey);
-
-            int dotColor = UIColors.getNotificationDotColor(context);
-            notificationView.setColorFilter(dotColor);
-        }
-
         return view;
     }
 
@@ -390,12 +368,8 @@ public class AppResult extends ResultWithTags<AppPojo> {
 
                 if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     // We're on a modern Android and can display activity animations
-                    // If AppResult, find the icon
-                    View potentialIcon = v.findViewById(R.id.item_app_icon);
-                    if (potentialIcon == null) {
-                        // If favorite, find the icon
-                        potentialIcon = v.findViewById(R.id.favorite);
-                    }
+                    // Find the favorite icon for animation
+                    View potentialIcon = v.findViewById(R.id.favorite);
 
                     if (potentialIcon != null) {
                         sourceBounds = getViewBounds(potentialIcon);

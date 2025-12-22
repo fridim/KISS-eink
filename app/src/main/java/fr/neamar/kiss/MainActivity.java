@@ -236,8 +236,17 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         setContentView(R.layout.main);
         this.list = this.findViewById(android.R.id.list);
         // Mudita Mindful Design: 1px dotted black separator for e-ink
-        this.list.setDivider(new DottedLineDrawable());
-        this.list.setDividerHeight((int) (2 * getResources().getDisplayMetrics().density));
+        float density = getResources().getDisplayMetrics().density;
+        int paddingLeft = (int) (8 * density);  // 8dp - matches result_margin_left
+        int paddingRight = 0;  // 0dp - MuditaScrollbar handles list padding dynamically
+        this.list.setDivider(new DottedLineDrawable(0xFF000000, 1, 2, 4, paddingLeft, paddingRight));
+        this.list.setDividerHeight((int) (2 * density));
+        // Add empty footer so divider appears after last item
+        View footer = new View(this);
+        footer.setLayoutParams(new android.widget.AbsListView.LayoutParams(
+            android.widget.AbsListView.LayoutParams.MATCH_PARENT, 0));
+        this.list.addFooterView(footer, null, false);
+        this.list.setFooterDividersEnabled(true);
         // Mudita Mindful Design: Custom e-ink scrollbar (attached after adapter set below)
         this.scrollbar = this.findViewById(R.id.muditaScrollbar);
         this.listContainer = (View) this.list.getParent();
@@ -277,11 +286,19 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
         // Mudita Mindful Design: Attach scrollbar after adapter is set
         this.scrollbar.attachToListView(this.list);
 
-        this.list.setOnItemClickListener((parent, v, position, id) -> adapter.onClick(position, v));
+        this.list.setOnItemClickListener((parent, v, position, id) -> {
+            // Check bounds to avoid clicking on footer view
+            if (position < adapter.getCount()) {
+                adapter.onClick(position, v);
+            }
+        });
 
         this.list.setLongClickable(true);
         this.list.setOnItemLongClickListener((parent, v, pos, id) -> {
-            ((RecordAdapter) parent.getAdapter()).onLongClick(pos, v);
+            // Use adapter field directly (parent.getAdapter() returns HeaderViewListAdapter when footer is present)
+            if (pos < adapter.getCount()) {
+                adapter.onLongClick(pos, v);
+            }
             return true;
         });
 

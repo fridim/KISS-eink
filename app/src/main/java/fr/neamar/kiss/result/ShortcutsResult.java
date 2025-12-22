@@ -62,46 +62,6 @@ public class ShortcutsResult extends ResultWithTags<ShortcutPojo> {
         TextView tagsView = view.findViewById(R.id.item_shortcut_tag);
         displayTags(context, fuzzyScore, tagsView);
 
-        final ImageView shortcutIcon = view.findViewById(R.id.item_shortcut_icon);
-        final ImageView appIcon = view.findViewById(R.id.item_app_icon);
-
-        if (!isHideIcons(context)) {
-            // set shortcut icon
-            this.setAsyncDrawable(shortcutIcon);
-
-            // set app icon
-            if (mLoadIconTask != null) {
-                mLoadIconTask.cancel();
-                mLoadIconTask = null;
-            }
-
-            // Prepare
-            if (isSubIconVisible(context)) {
-                appIcon.setVisibility(View.VISIBLE);
-                if (appDrawable != null) {
-                    appIcon.setImageDrawable(getAppDrawable(context));
-                } else {
-                    appIcon.setImageResource(android.R.color.transparent);
-                    AtomicReference<Drawable> appDrawable = new AtomicReference<>(null);
-                    mLoadIconTask = Utilities.runAsync((task) -> {
-                        if (task == mLoadIconTask) {
-                            // Retrieve icon for this shortcut
-                            appDrawable.set(getAppDrawable(context));
-                        }
-                    }, (task) -> {
-                        if (!task.isCancelled() && task == mLoadIconTask) {
-                            appIcon.setImageDrawable(appDrawable.get());
-                        }
-                    });
-                }
-            } else {
-                appIcon.setVisibility(View.GONE);
-            }
-        } else {
-            appIcon.setImageDrawable(null);
-            shortcutIcon.setImageDrawable(null);
-        }
-
         return view;
     }
 

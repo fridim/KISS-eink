@@ -28,11 +28,13 @@ public class MuditaScrollbar extends View implements AbsListView.OnScrollListene
     private static final int SCROLLBAR_WIDTH_DP = 32;  // Total width (increased)
     private static final int SCROLLBAR_PADDING_DP = 8; // Horizontal padding
     private static final int ARROW_SIZE_DP = 22;       // Chevron size (smaller)
-    private static final int ARROW_PADDING_DP = 16;    // Padding around arrows (increased)
-    private static final int TRACK_GAP_DP = 8;         // Gap between arrows and track
-    private static final int TRACK_WIDTH_DP = 10;      // Track width (slightly wider)
+    private static final int ARROW_PADDING_DP = 22;    // Padding around arrows (increased)
+    private static final int TRACK_GAP_DP = 2;         // Gap between arrows and track
+    private static final int TRACK_WIDTH_DP = 9;       // Track width
     private static final int MIN_THUMB_HEIGHT_DP = 16;
     private static final int CORNER_RADIUS_DP = 5;     // Rounded corners
+    private static final int LIST_PADDING_WITH_SCROLLBAR_DP = 48;
+    private static final int LIST_PADDING_WITHOUT_SCROLLBAR_DP = 8;
 
     private final Paint fillPaint;
     private final Paint strokePaint;
@@ -47,6 +49,8 @@ public class MuditaScrollbar extends View implements AbsListView.OnScrollListene
     private final int trackWidth;
     private final int minThumbHeight;
     private final int cornerRadius;
+    private final int listPaddingWithScrollbar;
+    private final int listPaddingWithoutScrollbar;
 
     private final Path upArrowPath;
     private final Path downArrowPath;
@@ -84,6 +88,8 @@ public class MuditaScrollbar extends View implements AbsListView.OnScrollListene
         trackWidth = (int) (TRACK_WIDTH_DP * density);
         minThumbHeight = (int) (MIN_THUMB_HEIGHT_DP * density);
         cornerRadius = (int) (CORNER_RADIUS_DP * density);
+        listPaddingWithScrollbar = (int) (LIST_PADDING_WITH_SCROLLBAR_DP * density);
+        listPaddingWithoutScrollbar = (int) (LIST_PADDING_WITHOUT_SCROLLBAR_DP * density);
 
         // Fill paint - solid black
         fillPaint = new Paint();
@@ -105,16 +111,16 @@ public class MuditaScrollbar extends View implements AbsListView.OnScrollListene
         whitePaint.setAntiAlias(true);
 
         // Arrow paint - filled with rounded corners
-        float cornerEffect = 3 * density;  // Rounded corner radius
+        float cornerEffect = 5 * density;  // Rounded corner radius (more rounded)
         arrowPaint = new Paint();
         arrowPaint.setColor(0xFF000000);
         arrowPaint.setStyle(Paint.Style.FILL);
         arrowPaint.setAntiAlias(true);
         arrowPaint.setPathEffect(new android.graphics.CornerPathEffect(cornerEffect));
 
-        // Disabled arrow paint - gray filled with rounded corners
+        // Disabled arrow paint - lighter gray filled with rounded corners
         arrowDisabledPaint = new Paint();
-        arrowDisabledPaint.setColor(0xFFAAAAAA);
+        arrowDisabledPaint.setColor(0xFFCCCCCC);
         arrowDisabledPaint.setStyle(Paint.Style.FILL);
         arrowDisabledPaint.setAntiAlias(true);
         arrowDisabledPaint.setPathEffect(new android.graphics.CornerPathEffect(cornerEffect));
@@ -234,6 +240,38 @@ public class MuditaScrollbar extends View implements AbsListView.OnScrollListene
         canScrollDown = !lastFullyVisible;
 
         setVisibility(isScrollable ? VISIBLE : GONE);
+        updateListPadding();
+    }
+
+    private void updateListPadding() {
+        if (attachedList == null) return;
+
+        int newPaddingEnd = isScrollable ? listPaddingWithScrollbar : listPaddingWithoutScrollbar;
+        int currentPaddingEnd = attachedList.getPaddingRight();
+
+        if (currentPaddingEnd != newPaddingEnd) {
+            attachedList.setPadding(
+                attachedList.getPaddingLeft(),
+                attachedList.getPaddingTop(),
+                newPaddingEnd,
+                attachedList.getPaddingBottom()
+            );
+
+            // Force child views to remeasure with new width
+            int widthSpec = View.MeasureSpec.makeMeasureSpec(
+                attachedList.getWidth() - attachedList.getPaddingLeft() - newPaddingEnd,
+                View.MeasureSpec.EXACTLY);
+            for (int i = 0; i < attachedList.getChildCount(); i++) {
+                View child = attachedList.getChildAt(i);
+                if (child != null) {
+                    int heightSpec = View.MeasureSpec.makeMeasureSpec(
+                        child.getHeight(), View.MeasureSpec.EXACTLY);
+                    child.measure(widthSpec, heightSpec);
+                    child.layout(attachedList.getPaddingLeft(), child.getTop(),
+                        attachedList.getWidth() - newPaddingEnd, child.getBottom());
+                }
+            }
+        }
     }
 
     @Override
@@ -365,9 +403,9 @@ public class MuditaScrollbar extends View implements AbsListView.OnScrollListene
     }
 
     private void drawChevronUp(Canvas canvas, int centerX, int centerY, boolean enabled) {
-        // Flat, wide triangle - width is larger than height
+        // Triangle arrow - taller shape
         int halfWidth = arrowSize / 2;
-        int halfHeight = arrowSize / 4;  // Flatter shape
+        int halfHeight = arrowSize / 3;  // Taller arrow
 
         upArrowPath.reset();
         // Filled triangle pointing up with rounded corners via CornerPathEffect
@@ -380,9 +418,9 @@ public class MuditaScrollbar extends View implements AbsListView.OnScrollListene
     }
 
     private void drawChevronDown(Canvas canvas, int centerX, int centerY, boolean enabled) {
-        // Flat, wide triangle - width is larger than height
+        // Triangle arrow - taller shape
         int halfWidth = arrowSize / 2;
-        int halfHeight = arrowSize / 4;  // Flatter shape
+        int halfHeight = arrowSize / 3;  // Taller arrow
 
         downArrowPath.reset();
         // Filled triangle pointing down with rounded corners via CornerPathEffect

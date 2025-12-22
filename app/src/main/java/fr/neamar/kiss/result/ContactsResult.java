@@ -86,27 +86,6 @@ public class ContactsResult extends CallResult<ContactsPojo> {
             displayHighlighted(pojo.normalizedNickname, pojo.getNickname(), fuzzyScore, contactNickname, context);
         }
 
-        // Contact photo
-        ImprovedQuickContactBadge contactIcon = view
-                .findViewById(R.id.item_contact_icon);
-
-        boolean hideIcons = isHideIcons(context);
-        if (!hideIcons) {
-            if (contactIcon.getTag() instanceof ContactsPojo && pojo.equals(contactIcon.getTag())) {
-                icon = contactIcon.getDrawable();
-            }
-            this.setAsyncDrawable(contactIcon);
-        } else {
-            contactIcon.setImageDrawable(null);
-        }
-
-        Uri contactUri = ContactsContract.Contacts.CONTENT_LOOKUP_URI;
-        contactUri = Uri.withAppendedPath(contactUri, String.valueOf(pojo.lookupKey));
-        contactUri = Uri.withAppendedPath(contactUri, String.valueOf(pojo.getContactId()));
-        contactIcon.assignContactUri(contactUri);
-
-        contactIcon.setExtraOnClickListener(v -> recordLaunch(v.getContext(), queryInterface));
-
         int primaryColor = UIColors.getPrimaryColor(context);
         PackageManager pm = context.getPackageManager();
         boolean hasPhone = pojo.phone != null && pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
@@ -149,30 +128,6 @@ public class ContactsResult extends CallResult<ContactsPojo> {
             }
         } else {
             messageButton.setVisibility(View.INVISIBLE);
-        }
-
-        // App icon
-        final ImageView appIcon = view.findViewById(R.id.item_app_icon);
-        if (pojo.getContactData() != null && !hideIcons && isSubIconVisible(context)) {
-            appIcon.setVisibility(View.VISIBLE);
-            if (appDrawable != null) {
-                appIcon.setImageDrawable(appDrawable);
-            } else {
-                appIcon.setImageResource(R.drawable.ic_launcher_white);
-                AtomicReference<Drawable> appDrawable = new AtomicReference<>(null);
-                mLoadIconTask = Utilities.runAsync((task) -> {
-                    if (task == mLoadIconTask) {
-                        // Retrieve icon for this shortcut
-                        appDrawable.set(getAppDrawable(context));
-                    }
-                }, (task) -> {
-                    if (!task.isCancelled() && task == mLoadIconTask) {
-                        appIcon.setImageDrawable(appDrawable.get());
-                    }
-                });
-            }
-        } else {
-            appIcon.setVisibility(View.GONE);
         }
 
         return view;

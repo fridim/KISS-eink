@@ -34,14 +34,6 @@ public class SettingsResult extends Result<SettingPojo> {
         TextView settingName = view.findViewById(R.id.item_setting_name);
         displayHighlighted(pojo.normalizedName, pojo.getName(), fuzzyScore, settingName, context);
 
-        ImageView settingIcon = view.findViewById(R.id.item_setting_icon);
-        if (!isHideIcons(context)) {
-            settingIcon.setImageDrawable(getDrawable(context));
-            settingIcon.setColorFilter(getThemeFillColor(context), Mode.SRC_IN);
-        } else {
-            settingIcon.setImageDrawable(null);
-        }
-
         return view;
     }
 

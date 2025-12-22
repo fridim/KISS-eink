@@ -56,6 +56,7 @@ import fr.neamar.kiss.pojo.TagDummyPojo;
 import fr.neamar.kiss.preference.ExcludePreferenceScreen;
 import fr.neamar.kiss.preference.PreferenceScreenHelper;
 import fr.neamar.kiss.preference.SwitchPreference;
+import fr.neamar.kiss.ui.DottedLineDrawable;
 import fr.neamar.kiss.ui.MuditaScrollbar;
 import fr.neamar.kiss.searcher.QuerySearcher;
 import fr.neamar.kiss.utils.DrawableUtils;
@@ -72,7 +73,7 @@ public class SettingsActivity extends PreferenceActivity implements
             "pref-rounded-list", "pref-rounded-bars", "pref-swap-kiss-button-with-menu", "pref-hide-circle", "history-hide",
             "enable-favorites-bar", "notification-bar-color", "black-notification-icons", "icons-pack", "theme-shadow",
             "theme-separator", "theme-result-color", "large-favorites-bar", "pref-hide-search-bar-hint", "theme-wallpaper",
-            "theme-bar-color", "results-size", "large-result-list-margins", "themed-icons", "icons-hide", null);
+            "theme-bar-color", "results-size", "large-result-list-margins", null);
     // Those settings require a restart of the settings
     final static private List<String> settingsRequiringRestartForSettingsActivity = Arrays.asList("theme", "force-portrait", null);
 
@@ -848,8 +849,13 @@ public class SettingsActivity extends PreferenceActivity implements
         listView.setVerticalScrollBarEnabled(false);
         listView.setFastScrollEnabled(false);
 
-        // Add right padding to make room for the scrollbar
+        // Set custom dotted divider matching preference item padding
         float density = getResources().getDisplayMetrics().density;
+        int paddingLeft = (int) (16 * density);  // 16dp - matches Android preference item padding
+        listView.setDivider(new DottedLineDrawable(0xFF000000, 1, 2, 4, paddingLeft, 0));
+        listView.setDividerHeight((int) (2 * density));
+
+        // Add right padding to make room for the scrollbar
         int scrollbarSpace = (int) (48 * density);
         listView.setPadding(
             listView.getPaddingLeft(),

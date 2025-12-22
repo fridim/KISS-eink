@@ -3,7 +3,6 @@ package fr.neamar.kiss.result;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.util.TypedValue;
@@ -62,13 +61,9 @@ public class TagDummyResult extends Result<TagDummyPojo> {
         if (view == null)
             view = inflateFromId(context, R.layout.item_search, parent);
 
-        ImageView image = view.findViewById(R.id.item_search_icon);
         TextView searchText = view.findViewById(R.id.item_search_text);
-
-        this.setAsyncDrawable(image);
         searchText.setText(pojo.getName());
 
-        image.setColorFilter(getThemeFillColor(context), PorterDuff.Mode.SRC_IN);
         return view;
     }
 

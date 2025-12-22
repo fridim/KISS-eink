@@ -84,9 +84,8 @@ public class InterfaceTweaks extends Forwarder {
                 break;
         }
 
-        if (prefs.getBoolean("icons-hide", true)) {
-            act.getTheme().applyStyle(R.style.OverlayResultSizeNoIcons, true);
-        }
+        // Icons are always hidden in this e-ink optimized version
+        act.getTheme().applyStyle(R.style.OverlayResultSizeNoIcons, true);
 
         applySystemBarInsets(act.getWindow().getDecorView());
     }

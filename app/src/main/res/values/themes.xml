@@ -131,6 +131,8 @@
         <item name="android:switchStyle">@style/MuditaSwitch</item>
         <!-- Mudita: Black preference category headers -->
         <item name="android:preferenceCategoryStyle">@style/MuditaPreferenceCategory</item>
+        <!-- Mudita: Dotted list divider -->
+        <item name="android:listDivider">@drawable/list_separator_dotted</item>
     </style>
 
     <!-- Mudita Mindful Design: Switch style for e-ink
@@ -159,6 +161,8 @@
         <item name="android:switchStyle">@style/MuditaSwitch</item>
         <!-- Mudita: Black preference category headers -->
         <item name="android:preferenceCategoryStyle">@style/MuditaPreferenceCategory</item>
+        <!-- Mudita: Dotted list divider -->
+        <item name="android:listDivider">@drawable/list_separator_dotted</item>
     </style>
 
     <style name="OverlayShadowDisabled">

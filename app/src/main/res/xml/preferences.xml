@@ -208,21 +208,7 @@
                 android:summary="@string/contacts_shape_summary"
                 android:title="@string/contacts_shape" />
 
-            <fr.neamar.kiss.preference.SwitchPreference
-                android:defaultValue="false"
-                android:key="themed-icons"
-                android:summary="@string/icons_themed_summary"
-                android:title="@string/icons_themed_name" />
-            <fr.neamar.kiss.preference.SwitchPreference
-                android:defaultValue="true"
-                android:key="subicon-visible"
-                android:title="@string/show_subicons" />
-            <fr.neamar.kiss.preference.SwitchPreference
-                android:defaultValue="true"
-                android:key="icons-hide"
-                android:summary="@string/icons_hide_desc"
-                android:title="@string/icons_hide_main" />
-        </PreferenceCategory>
+            </PreferenceCategory>
 
         <PreferenceCategory
             android:key="colors-section"
