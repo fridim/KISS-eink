@@ -22,7 +22,11 @@ Join the [beta program](https://play.google.com/apps/testing/fr.neamar.kiss/) to
 
 Public Telegram chat: https://t.me/joinchat/_eDeAIQJU1FlNjM0
 
-This fork is a version of KISS with style and cosmetic changes to work well on e-ink screens
+This fork is a version of KISS with style and cosmetic changes to work well on e-ink screens.
+
+### Permissions
+
+On first launch, you will be prompted to grant **Notification Listener** access. This enables notification dots on app icons in the launcher — a small dot appears on apps that have unread notifications. You can revoke this at any time in **Settings → Apps → Special access → Notification access**.
 
 ### Screenshots
 <table>

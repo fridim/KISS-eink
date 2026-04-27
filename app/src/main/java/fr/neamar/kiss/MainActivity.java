@@ -433,6 +433,16 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
          * Defer everything else to the forwarders
          */
         forwarderManager.onCreate();
+
+        // Prompt for notification listener access on first run
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1
+                && prefs.getBoolean("first-run-notification-access", true)) {
+            prefs.edit().putBoolean("first-run-notification-access", false).apply();
+            String allowedApps = Settings.Secure.getString(getContentResolver(), "enabled_notification_listeners");
+            if (allowedApps == null || !allowedApps.contains(getPackageName())) {
+                startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
+            }
+        }
     }
 
     @Override
