@@ -80,6 +80,7 @@ public class Favorites extends Forwarder implements View.OnClickListener, View.O
     private int favCount = -1;
 
     private SharedPreferences notificationPrefs = null;
+    private boolean isKeyboardVisible = false;
 
     Favorites(MainActivity mainActivity) {
         super(mainActivity);
@@ -196,8 +197,25 @@ public class Favorites extends Forwarder implements View.OnClickListener, View.O
         toBeDisposed.setOnTouchListener(null);
     }
 
+    void onGlobalLayout() {
+        // Detect soft keyboard by checking if the activity has been resized significantly.
+        // With adjustResize, the content view shrinks when the keyboard appears.
+        View activityRootView = mainActivity.findViewById(android.R.id.content);
+        int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
+        boolean keyboardNowVisible = heightDiff > activityRootView.getRootView().getHeight() * 0.15;
+
+        if (keyboardNowVisible != isKeyboardVisible) {
+            isKeyboardVisible = keyboardNowVisible;
+            if (isKeyboardVisible) {
+                mainActivity.favoritesBar.setVisibility(View.GONE);
+            } else if (TextUtils.isEmpty(mainActivity.searchEditText.getText())) {
+                mainActivity.favoritesBar.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
     void updateSearchRecords(String query) {
-        if (TextUtils.isEmpty(query)) {
+        if (TextUtils.isEmpty(query) && !isKeyboardVisible) {
             mainActivity.favoritesBar.setVisibility(View.VISIBLE);
         } else {
             mainActivity.favoritesBar.setVisibility(View.GONE);

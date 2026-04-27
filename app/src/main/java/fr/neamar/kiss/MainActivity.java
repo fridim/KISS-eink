@@ -247,6 +247,7 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
             android.widget.AbsListView.LayoutParams.MATCH_PARENT, 0));
         this.list.addFooterView(footer, null, false);
         this.list.setFooterDividersEnabled(true);
+        this.list.setHeaderDividersEnabled(false);
         // Mudita Mindful Design: Custom e-ink scrollbar (attached after adapter set below)
         this.scrollbar = this.findViewById(R.id.muditaScrollbar);
         this.listContainer = (View) this.list.getParent();
@@ -386,6 +387,10 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
                 }
                 systemUiVisibilityHelper.onKeyboardVisibilityChanged(false);
                 hider.fixScroll();
+                // Restore favorites bar if search is empty (keyboard dismissed without typing)
+                if (TextUtils.isEmpty(searchEditText.getText()) && favoritesBar != null) {
+                    favoritesBar.setVisibility(View.VISIBLE);
+                }
                 return false;
             }
 

@@ -134,6 +134,7 @@ public class ForwarderManager extends Forwarder {
 
     public void onGlobalLayout() {
         experienceTweaks.onGlobalLayout();
+        favoritesForwarder.onGlobalLayout();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
