@@ -93,8 +93,8 @@ public class IconsHandler {
                 key.equalsIgnoreCase(DrawableUtils.KEY_THEMED_ICONS)) {
             cacheClear();
             mSystemPack.setAdaptiveShape(getAdaptiveShape(pref, "adaptive-shape"));
-            mForceAdaptive = pref.getBoolean("force-adaptive", true);
-            mForceShape = pref.getBoolean("force-shape", true);
+            mForceAdaptive = pref.getBoolean("force-adaptive", false);
+            mForceShape = pref.getBoolean("force-shape", false);
             mContactPackMask = pref.getBoolean("contact-pack-mask", true);
             mContactsShape = getAdaptiveShape(pref, "contacts-shape");
             loadIconsPack(pref.getString("icons-pack", null));
@@ -117,11 +117,16 @@ public class IconsHandler {
      * @param packageName Android package ID of the package to parse
      */
     private void loadIconsPack(String packageName) {
-        // system icons, nothing to do
+        // If no icon pack has been explicitly chosen, default to Arcticons Black if available
         if (packageName == null || packageName.equalsIgnoreCase("default")) {
-            cacheClear();
-            mIconPack = null;
-            return;
+            String arcticons = findArcticonsBlack();
+            if (arcticons != null) {
+                packageName = arcticons;
+            } else {
+                cacheClear();
+                mIconPack = null;
+                return;
+            }
         }
 
         // don't reload the icon pack
@@ -361,6 +366,31 @@ public class IconsHandler {
                 Log.e(TAG, "Unable to find package " + packageName);
             }
         }
+    }
+
+    /**
+     * Find Arcticons Black icon pack among installed packs.
+     * Searches by package name and display name to handle variant package naming.
+     */
+    @Nullable
+    private String findArcticonsBlack() {
+        // Try known package names first
+        for (String pkg : new String[]{
+                "com.donnnno.arcticons.black",
+                "com.donnnno.arcticons.dark",
+                "com.donnnno.arcticons"}) {
+            if (iconsPacks.containsKey(pkg)) {
+                return pkg;
+            }
+        }
+        // Fall back to searching by display name
+        for (Map.Entry<String, String> entry : iconsPacks.entrySet()) {
+            String name = entry.getValue().toLowerCase();
+            if (name.contains("arcticons") && name.contains("black")) {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
 
     Map<String, String> getIconsPacks() {
