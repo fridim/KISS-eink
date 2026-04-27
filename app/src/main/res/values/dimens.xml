@@ -38,7 +38,7 @@
     <dimen name="result_notification_dot_size_small">11dp</dimen>
     <dimen name="result_title_size_small">18sp</dimen>
     <dimen name="result_subtitle_size_small">11sp</dimen>
-    <dimen name="result_height_small">41dp</dimen>
+    <dimen name="result_height_small">34dp</dimen>
 
     <dimen name="result_icon_size_smallest">24dp</dimen>
     <dimen name="result_subicon_size_smallest">10dp</dimen>
@@ -49,8 +49,8 @@
 
     <dimen name="result_margin_left">8dp</dimen>
     <dimen name="result_margin_right">0dp</dimen>
-    <dimen name="result_margin_top">2dp</dimen>
-    <dimen name="result_margin_bottom">2dp</dimen>
+    <dimen name="result_margin_top">0dp</dimen>
+    <dimen name="result_margin_bottom">0dp</dimen>
 
 
     <dimen name="color_swatch_large">64dip</dimen>
@@ -58,7 +58,7 @@
     <dimen name="color_swatch_margins_large">8dip</dimen>
     <dimen name="color_swatch_margins_small">4dip</dimen>
 
-    <dimen name="bar_height">40dp</dimen>
+    <dimen name="bar_height">34dp</dimen>
     <dimen name="large_bar_height">58dp</dimen>
     <dimen name="search_corner_radius">20dp</dimen>
     <dimen name="list_corner_radius">20dp</dimen>
@@ -68,9 +68,9 @@
     <dimen name="launcher_button_width">45dp</dimen>
     <dimen name="launcher_button_padding">10dp</dimen>
 
-    <dimen name="favorite_padding">8dp</dimen>
-    <dimen name="favorite_height">78dp</dimen>
-    <dimen name="large_favorite_height">88dp</dimen>
+    <dimen name="favorite_padding">0dp</dimen>
+    <dimen name="favorite_height">72dp</dimen>
+    <dimen name="large_favorite_height">72dp</dimen>
 
     <dimen name="popup_title">24sp</dimen>
 </resources>

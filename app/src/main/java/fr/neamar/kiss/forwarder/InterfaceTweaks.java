@@ -80,7 +80,7 @@ public class InterfaceTweaks extends Forwarder {
                 break;
             case "default":
             default:
-                act.getTheme().applyStyle(R.style.OverlayResultSizeStandard, true);
+                act.getTheme().applyStyle(R.style.OverlayResultSizeSmall, true);
                 break;
         }
 
