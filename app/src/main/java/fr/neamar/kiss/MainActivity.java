@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -47,6 +48,7 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.neamar.kiss.DummyActivity;
 import fr.neamar.kiss.adapter.RecordAdapter;
 import fr.neamar.kiss.broadcast.IncomingCallHandler;
 import fr.neamar.kiss.dataprovider.simpleprovider.SearchProvider;
@@ -434,7 +436,23 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
          */
         forwarderManager.onCreate();
 
-        // Prompt for notification listener access on first run
+        // First run: prompt to set KISS as default launcher
+        if (prefs.getBoolean("first-run-default-launcher", true)) {
+            prefs.edit().putBoolean("first-run-default-launcher", false).apply();
+            if (!isKissDefaultLauncher()) {
+                PackageManager packageManager = getPackageManager();
+                ComponentName componentName = new ComponentName(this, DummyActivity.class);
+                packageManager.setComponentEnabledSetting(componentName,
+                        PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+                Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+                homeIntent.addCategory(Intent.CATEGORY_HOME);
+                startActivity(homeIntent);
+                packageManager.setComponentEnabledSetting(componentName,
+                        PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+            }
+        }
+
+        // First run: prompt for notification listener access
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1
                 && prefs.getBoolean("first-run-notification-access", true)) {
             prefs.edit().putBoolean("first-run-notification-access", false).apply();

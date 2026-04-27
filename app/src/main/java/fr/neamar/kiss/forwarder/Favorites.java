@@ -198,7 +198,7 @@ public class Favorites extends Forwarder implements View.OnClickListener, View.O
     }
 
     void onGlobalLayout() {
-        // Detect soft keyboard by checking if the activity has been resized significantly.
+        // Detect soft keyboard by checking if the activity has been resized.
         // With adjustResize, the content view shrinks when the keyboard appears.
         View activityRootView = mainActivity.findViewById(android.R.id.content);
         int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
