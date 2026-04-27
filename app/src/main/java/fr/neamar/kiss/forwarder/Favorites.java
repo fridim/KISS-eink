@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -110,6 +111,45 @@ public class Favorites extends Forwarder implements View.OnClickListener, View.O
             notificationPrefs = mainActivity.getSharedPreferences(NotificationListener.NOTIFICATION_PREFERENCES_NAME, Context.MODE_PRIVATE);
         }
 
+        // E-ink: pre-hide favorites when search bar gains focus, before keyboard appears.
+        // This batches the favorites hide with the keyboard appearance, reducing refreshes.
+        mainActivity.searchEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus && mainActivity.favoritesBar != null) {
+                mainActivity.favoritesBar.setVisibility(View.GONE);
+            }
+        });
+
+        // E-ink: Use OnPreDrawListener for keyboard detection instead of onGlobalLayout.
+        // OnPreDrawListener fires after layout but BEFORE draw. When we detect a keyboard
+        // state change, we update favorites visibility and return false (cancel the draw),
+        // forcing a re-layout. The next draw includes both the system resize AND our
+        // favorites change — one e-ink refresh instead of two.
+        final View activityRootView = mainActivity.findViewById(android.R.id.content);
+        activityRootView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            private boolean redrawPending = false;
+
+            @Override
+            public boolean onPreDraw() {
+                int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
+                boolean keyboardNowVisible = heightDiff > activityRootView.getRootView().getHeight() * 0.15;
+
+                if (keyboardNowVisible != isKeyboardVisible) {
+                    isKeyboardVisible = keyboardNowVisible;
+                    if (isKeyboardVisible) {
+                        mainActivity.favoritesBar.setVisibility(View.GONE);
+                    } else if (TextUtils.isEmpty(mainActivity.searchEditText.getText())) {
+                        mainActivity.favoritesBar.setVisibility(View.VISIBLE);
+                    }
+                    if (!redrawPending) {
+                        redrawPending = true;
+                        return false; // Cancel draw, re-layout with updated visibility
+                    }
+                }
+                redrawPending = false;
+                return true;
+            }
+        });
+
         onFavoriteChange();
     }
 
@@ -198,20 +238,9 @@ public class Favorites extends Forwarder implements View.OnClickListener, View.O
     }
 
     void onGlobalLayout() {
-        // Detect soft keyboard by checking if the activity has been resized.
-        // With adjustResize, the content view shrinks when the keyboard appears.
-        View activityRootView = mainActivity.findViewById(android.R.id.content);
-        int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
-        boolean keyboardNowVisible = heightDiff > activityRootView.getRootView().getHeight() * 0.15;
-
-        if (keyboardNowVisible != isKeyboardVisible) {
-            isKeyboardVisible = keyboardNowVisible;
-            if (isKeyboardVisible) {
-                mainActivity.favoritesBar.setVisibility(View.GONE);
-            } else if (TextUtils.isEmpty(mainActivity.searchEditText.getText())) {
-                mainActivity.favoritesBar.setVisibility(View.VISIBLE);
-            }
-        }
+        // Keyboard detection moved to OnPreDrawListener registered in onCreate().
+        // OnPreDrawListener can cancel the draw and force re-layout, batching the system's
+        // keyboard resize with our favorites visibility change into a single rendered frame.
     }
 
     void updateSearchRecords(String query) {

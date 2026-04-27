@@ -1,13 +1,8 @@
 package fr.neamar.kiss.ui;
 
-import android.animation.Animator;
-import android.animation.ValueAnimator;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-
-import androidx.annotation.NonNull;
 
 /**
  * Utility class for automatically hiding the keyboard when scrolling down a {@link android.widget.ListView},
@@ -161,44 +156,8 @@ public class KeyboardScrollHider implements View.OnTouchListener {
             case MotionEvent.ACTION_CANCEL:
                 this.lastMotionEvent = null;
 
-                if (!this.resizeDone) {
-                    ValueAnimator animator = ValueAnimator.ofInt(
-                            this.list.getHeight(),
-                            this.listParent.getHeight()
-                    );
-                    animator.setDuration(250);
-                    animator.setInterpolator(new AccelerateInterpolator());
-                    animator.addUpdateListener(animation -> {
-                        int height = (int) animation.getAnimatedValue();
-                        KeyboardScrollHider.this.setListLayoutHeight(height);
-                    });
-                    animator.addListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(@NonNull Animator animation) {
-                            // Give the list view the control over it's input back
-                            KeyboardScrollHider.this.list.unblockTouchEvents();
-
-                            // Quickly fade out edge pull effect
-                            KeyboardScrollHider.this.pullEffect.releasePull();
-                        }
-
-                        @Override
-                        public void onAnimationEnd(@NonNull Animator animation) {
-                            KeyboardScrollHider.this.handleResizeDone();
-                        }
-
-                        @Override
-                        public void onAnimationCancel(@NonNull Animator animation) {
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(@NonNull Animator animation) {
-                        }
-                    });
-                    animator.start();
-                } else {
-                    this.handleResizeDone();
-                }
+                // E-ink: immediate resize, no animation
+                this.handleResizeDone();
 
                 break;
         }

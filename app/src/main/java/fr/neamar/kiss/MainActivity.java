@@ -36,7 +36,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
@@ -389,10 +388,8 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
                 }
                 systemUiVisibilityHelper.onKeyboardVisibilityChanged(false);
                 hider.fixScroll();
-                // Restore favorites bar if search is empty (keyboard dismissed without typing)
-                if (TextUtils.isEmpty(searchEditText.getText()) && favoritesBar != null) {
-                    favoritesBar.setVisibility(View.VISIBLE);
-                }
+                // Favorites bar restoration handled by OnPreDrawListener in Favorites.java
+                // to batch it with the keyboard resize into a single e-ink frame
                 return false;
             }
 
@@ -828,13 +825,6 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
 
     protected void displayKissBar(boolean display, boolean clearSearchText) {
         dismissPopup();
-        // get the center for the clipping circle
-        ViewGroup launcherButtonWrapper = (ViewGroup) launcherButton.getParent();
-        int cx = (launcherButtonWrapper.getLeft() + launcherButtonWrapper.getRight()) / 2;
-        int cy = (launcherButtonWrapper.getTop() + launcherButtonWrapper.getBottom()) / 2;
-
-        // get the final radius for the clipping circle
-        int finalRadius = Math.max(kissBar.getWidth(), kissBar.getHeight());
 
         if (display) {
             // Display the app list
@@ -848,45 +838,16 @@ public class MainActivity extends Activity implements QueryInterface, KeyboardSc
 
             updateSearchRecords(false, searchEditText.getText().toString());
 
-            // Reveal the bar
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                int animationDuration = getResources().getInteger(
-                        android.R.integer.config_shortAnimTime);
-
-                Animator anim = ViewAnimationUtils.createCircularReveal(kissBar, cx, cy, 0, finalRadius);
-                anim.setDuration(animationDuration);
-                anim.start();
-            }
+            // E-ink: instant visibility, no circular reveal animation
             kissBar.setVisibility(View.VISIBLE);
 
             // E-ink: Don't use fast scroll - MuditaScrollbar handles navigation
             // list.setFastScrollEnabled(true);
         } else {
             isDisplayingKissBar = false;
-            // Hide the bar
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                int animationDuration = getResources().getInteger(
-                        android.R.integer.config_shortAnimTime);
 
-                try {
-                    Animator anim = ViewAnimationUtils.createCircularReveal(kissBar, cx, cy, finalRadius, 0);
-                    anim.addListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            kissBar.setVisibility(View.GONE);
-                            super.onAnimationEnd(animation);
-                        }
-                    });
-                    anim.setDuration(animationDuration);
-                    anim.start();
-                } catch (IllegalStateException e) {
-                    // If the view hasn't been laid out yet, we can't animate it
-                    kissBar.setVisibility(View.GONE);
-                }
-            } else {
-                // No animation before Lollipop
-                kissBar.setVisibility(View.GONE);
-            }
+            // E-ink: instant visibility, no circular reveal animation
+            kissBar.setVisibility(View.GONE);
 
             if (clearSearchText) {
                 clearSearchText();
